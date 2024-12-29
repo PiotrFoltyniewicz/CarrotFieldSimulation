@@ -8,6 +8,8 @@ public class Main {
         FileHandler fileHandler = new FileHandler();
         fileHandler.openSettingsFile("../resources/settings.txt");
         fileHandler.openStatisticsFile("../resources/statistics.txt");
+        GameManager gameManager = new GameManager();
+        gameManager.startSimulation();
 
     }
 }
