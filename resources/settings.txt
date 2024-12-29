@@ -1,0 +1,11 @@
+fieldSize: 20
+entitySightRange: 5
+entitySpeed: 1
+initialFarmerCount: 5
+rabbitSpawnChance: 0.1
+minRabbitEatingTime: 3
+maxRabbitEatingTime: 8
+minCarrotGrowingTime: 6
+maxCarrotEatingTime: 16
+minLandRepairingTime: 1
+maxLandRepairingTime: 4
