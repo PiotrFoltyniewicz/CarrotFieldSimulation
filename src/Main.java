@@ -1,8 +1,13 @@
+
+import general.*;
+
 public class Main {
 
-	public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
 
-		System.out.println("Hello, World!");
-	
-	}
+        FileHandler fileHandler = new FileHandler();
+        fileHandler.openSettingsFile("../resources/settings.txt");
+        fileHandler.openStatisticsFile("../resources/statistics.txt");
+
+    }
 }
