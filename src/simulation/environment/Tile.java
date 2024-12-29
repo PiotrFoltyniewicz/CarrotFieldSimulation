@@ -1,20 +1,20 @@
 package simulation.environment;
-import java.util.*;
 
 public class Tile {
+
     private boolean hasRabbit;
     private boolean hasCarrot;
     private boolean isDestroyed;
 
-    public boolean getHasRabbit(){
+    public boolean getHasRabbit() {
         return hasRabbit;
     }
 
-    public boolean getHasCarrot(){
+    public boolean getHasCarrot() {
         return hasCarrot;
     }
 
-    public boolean getIsDestroyed(){
+    public boolean getIsDestroyed() {
         return isDestroyed;
     }
 
