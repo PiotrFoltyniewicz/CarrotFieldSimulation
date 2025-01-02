@@ -12,6 +12,9 @@ public class GameManager {
 
     public void startSimulation() {
         System.out.println("starting");
+        Field field = new Field(4);
+        renderer = new SimulationGUI(field.getFieldSize());
+        renderer.renderTurn(entities, field);
     }
 
     public void manageTurn() {
