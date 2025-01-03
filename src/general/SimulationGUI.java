@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 import simulation.entities.Carrot;
 import simulation.entities.Entity;
@@ -11,7 +14,7 @@ import simulation.entities.Rabbit;
 import simulation.environment.Field;
 
 public class SimulationGUI {
-    private JLabel[][] grid;
+    private JPanelWithBackground[][] grid;
     private JPanel panel;
     private GameManager gameManager;
 
@@ -28,15 +31,23 @@ public class SimulationGUI {
         frame.setSize(800, 800);
 
         panel = new JPanel(new GridLayout(fieldSize, fieldSize));
-        grid = new JLabel[fieldSize][fieldSize];
+        grid = new JPanelWithBackground[fieldSize][fieldSize];
 
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                JLabel tile = new JLabel("Tile", SwingConstants.CENTER);
-                tile.setOpaque(true);
-                tile.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                panel.add(tile);
-                grid[row][col] = tile;
+                try {
+                    JPanelWithBackground tile = new JPanelWithBackground("../resources/img/grass.png");
+                    tile.setOpaque(true);
+                    tile.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    panel.add(tile);
+                    grid[row][col] = tile;
+                } catch (IOException e) {
+                    System.err.println("Error loading grass image: " + e.getMessage());
+                    JPanel tile = new JPanel();
+                    tile.setBackground(Color.GREEN);
+                    panel.add(tile);
+                    grid[row][col] = null;
+                }
             }
         }
         this.loadImages();
@@ -74,17 +85,27 @@ public class SimulationGUI {
                 for (Entity entity : entitiesOnTile) {
                     System.out.println(entity.getClass().getSimpleName());
                     if (entity instanceof Carrot) {
-                        grid[row][col].setIcon(carrotIcon);
+                        grid[row][col].setEntityIcon(carrotIcon);
                     }
                     if (entity instanceof Rabbit) {
-                        grid[row][col].setIcon(rabbitIcon);
+                        grid[row][col].setEntityIcon(rabbitIcon);
                     }
                 }
 
                 if (field.getTile(row, col).getIsDestroyed()) {
-                    grid[row][col].setBackground(Color.gray);
+                    try {
+                        grid[row][col].setBackgroundImage("../resources/img/dirt.png");
+                    } catch (IOException e) {
+                        System.err.println("Error loading dirt image: " + e.getMessage());
+                        grid[row][col].setBackground(Color.gray);
+                    }
                 } else {
-                    grid[row][col].setBackground(Color.GREEN);
+                    try {
+                        grid[row][col].setBackgroundImage("../resources/img/grass.png");
+                    } catch (IOException e) {
+                        System.err.println("Error loading grass image: " + e.getMessage());
+                        grid[row][col].setBackground(Color.GREEN);
+                    }
                 }
             }
         }
@@ -94,5 +115,39 @@ public class SimulationGUI {
     private void refresh() {
         panel.revalidate();
         panel.repaint();
+    }
+}
+
+class JPanelWithBackground extends JPanel {
+
+    private Image backgroundImage;
+    private JLabel entityLabel;
+
+    public JPanelWithBackground(String fileName) throws IOException {
+        setBackgroundImage(fileName);
+        entityLabel = new JLabel();
+        setLayout(new BorderLayout());
+        add(entityLabel, BorderLayout.CENTER);
+    }
+
+    public void setBackgroundImage(String fileName) throws IOException {
+        backgroundImage = ImageIO.read(new File(fileName));
+        repaint();
+    }
+
+    public void setEntityIcon(ImageIcon icon) {
+        entityLabel.setIcon(icon);
+    }
+
+    public void clearEntityIcon() {
+        entityLabel.setIcon(null);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 }
