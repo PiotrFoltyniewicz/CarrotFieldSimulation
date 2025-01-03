@@ -10,12 +10,15 @@ public class Carrot extends StaticEntity {
 
     @Override
     protected boolean tryAction() {
+        if (turnsLeft == 0) {
+            return false;
+        }
         turnsLeft--;
-        return turnsLeft <= 0;
+        return turnsLeft == 0;
     }
 
     @Override
     public EntityAction getAction() {
-        return tryAction() ? new CarrotReadyAction() : new NoneAction();
+        return tryAction() ? new CarrotReadyAction(position.x, position.y) : new NoneAction();
     }
 }

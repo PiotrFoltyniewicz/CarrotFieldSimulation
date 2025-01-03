@@ -9,7 +9,7 @@ public class FileHandler {
     private File statisticsFile;
     private static FileHandler instance;
 
-    public FileHandler getInstance() {
+    public static FileHandler getInstance() {
         if (instance == null) {
             instance = new FileHandler();
         }
@@ -35,7 +35,7 @@ public class FileHandler {
         }
     }
 
-    public String readSettingsParameter(String key) throws IOException {
+    public String readSettingsParameter(String key) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(settingsFile));
             String line;
@@ -50,10 +50,10 @@ public class FileHandler {
             System.err.println("Failed to extract parameter from settings file");
             e.printStackTrace();
         }
-        throw new IOException("Parameter " + key + " doesn't exist");
+        return null;
     }
 
-    public <T> void writeStatisticsParameter(String key, T value) throws IOException {
+    public <T> void writeStatisticsParameter(String key, T value) {
         List<String> fileLines = new ArrayList<>();
         boolean keyFound = false;
 
@@ -88,6 +88,28 @@ public class FileHandler {
             writer.close();
         } catch (IOException e) {
             System.err.println("Failed to write data to the statistics file");
+            e.printStackTrace();
+        }
+    }
+
+    public void incrementStatisticsParameter(String key) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(statisticsFile));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.startsWith(key + ":")) {
+                    String[] parts = line.split(":");
+                    String valueStr = parts[1].trim();
+                    int value = Integer.parseInt(valueStr);
+                    writeStatisticsParameter(key, value + 1);
+                    return;
+                }
+            }
+            reader.close();
+            writeStatisticsParameter(key, 1);
+        } catch (IOException e) {
+            System.err.println("Failed to read statistics file");
             e.printStackTrace();
         }
     }
