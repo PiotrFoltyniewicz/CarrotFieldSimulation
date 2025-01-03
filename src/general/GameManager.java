@@ -24,4 +24,22 @@ public class GameManager {
     public Field getField() {
         return field;
     }
+
+    public List<Entity> getEntitiesOnTile(int x, int y) {
+        List<Entity> output = new ArrayList<>();
+        for (Entity entity : entities) {
+            if (entity.getPosition().x == x && entity.getPosition().y == y) {
+                output.add(entity);
+            }
+        }
+        return output;
+    }
+
+    public void addEntity(Entity entity) {
+        entities.add(entity);
+    }
+
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
+    }
 }

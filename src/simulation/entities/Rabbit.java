@@ -16,6 +16,6 @@ public class Rabbit extends StaticEntity {
 
     @Override
     public EntityAction getAction() {
-        return tryAction() ? new EatCarrotAction() : new NoneAction();
+        return tryAction() ? new EatCarrotAction(position.x, position.y) : new NoneAction();
     }
 }
