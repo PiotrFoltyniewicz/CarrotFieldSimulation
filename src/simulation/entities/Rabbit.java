@@ -9,7 +9,7 @@ public class Rabbit extends StaticEntity {
     }
 
     @Override
-    public boolean tryAction() {
+    protected boolean tryAction() {
         turnsLeft--;
         return turnsLeft <= 0;
     }

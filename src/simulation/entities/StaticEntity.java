@@ -4,7 +4,7 @@ public abstract class StaticEntity extends Entity {
 
     protected int turnsLeft;
 
-    public abstract boolean tryAction();
+    protected abstract boolean tryAction();
 
     public StaticEntity(int posX, int posY, int turnsLeft) {
         super(posX, posY);
