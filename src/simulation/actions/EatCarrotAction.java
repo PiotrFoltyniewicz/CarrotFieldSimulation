@@ -18,7 +18,7 @@ public class EatCarrotAction extends EntityAction {
         List<Entity> entitiesOnTile = manager.getEntitiesOnTile(x, y);
         manager.getField().getTile(x, y).setHasCarrot(false);
         for (Entity entity : entitiesOnTile) {
-            if (entity instanceof Carrot) {
+            if (entity instanceof Carrot || entity instanceof Rabbit) {
                 manager.removeEntity(entity);
             }
         }
