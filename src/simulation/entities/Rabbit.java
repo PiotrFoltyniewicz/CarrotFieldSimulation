@@ -19,4 +19,3 @@ public class Rabbit extends StaticEntity {
         return tryAction() ? new EatCarrotAction() : new NoneAction();
     }
 }
-}
