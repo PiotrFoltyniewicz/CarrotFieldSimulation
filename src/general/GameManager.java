@@ -1,9 +1,7 @@
 package general;
 
 import java.util.*;
-import simulation.entities.Entity;
-import simulation.entities.Rabbit;
-import simulation.entities.Carrot;
+import simulation.entities.*;
 import simulation.environment.Field;
 
 public class GameManager {
@@ -11,28 +9,59 @@ public class GameManager {
     private Field field;
     private SimulationGUI renderer;
     private List<Entity> entities;
+    private int maxTurns;
 
     public GameManager() {
-        field = new Field(4);
+        maxTurns = Integer.parseInt(FileHandler.getInstance().readSettingsParameter("maxTurnLimit"));
+        field = new Field(Integer.parseInt(FileHandler.getInstance().readSettingsParameter("fieldSize")));
+        entities = new ArrayList<>();
+        renderer = new SimulationGUI(this);
+        /*
         field.getTile(3, 2).setIsDestroyed(true);
         field.getTile(2, 2).setHasCarrot(true);
         field.getTile(2, 1).setHasRabbit(false);
         Rabbit rabbit = new Rabbit(0, 0, 10);
         Carrot carrot = new Carrot(1, 0, 10);
 
-        entities = new ArrayList<>();
         entities.add(rabbit);
         entities.add(carrot);
+         */
+    }
+
+    private void spawnEntities() {
+        int farmerCount = Integer.parseInt(FileHandler.getInstance().readSettingsParameter("initialFarmerCount"));
+        int entitySightRange = Integer.parseInt(FileHandler.getInstance().readSettingsParameter("entitySightRange"));
+        Random random = new Random();
+
+        for (int i = 0; i < farmerCount; i++) {
+            int x = random.nextInt(field.getFieldSize());
+            int y = random.nextInt(field.getFieldSize());
+            Farmer newFarmer = new Farmer(x, y, entitySightRange);
+            addEntity(newFarmer);
+            addEntity(newFarmer.getDog());
+        }
     }
 
     public void startSimulation() {
-        System.out.println("starting ");
-        renderer = new SimulationGUI(this);
-        this.manageTurn();
+        int turn = 0;
+        System.out.println("starting");
+        spawnEntities();
+
+        while (turn < maxTurns) {
+            this.manageTurn();
+            turn++;
+        }
+        System.out.println("simulation finished");
     }
 
     public void manageTurn() {
+
+        Iterator<Entity> iterator = entities.iterator();
+        while (iterator.hasNext()) {
+            iterator.next().getAction().execute(this);
+        }
         renderer.renderTurn();
+
     }
 
     public Field getField() {

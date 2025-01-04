@@ -1,4 +1,5 @@
 fieldSize: 20
+maxTurnLimit: 100
 entitySightRange: 5
 initialFarmerCount: 5
 rabbitSpawnChance: 0.1
