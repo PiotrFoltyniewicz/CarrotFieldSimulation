@@ -18,14 +18,14 @@ public class GameManager {
         entities = new CopyOnWriteArrayList<>();
         renderer = new SimulationGUI(this);
         /*
-        field.getTile(3, 2).setIsDestroyed(true);
-        field.getTile(2, 2).setHasCarrot(true);
-        field.getTile(2, 1).setHasRabbit(false);
-        Rabbit rabbit = new Rabbit(0, 0, 10);
-        Carrot carrot = new Carrot(1, 0, 10);
-
-        entities.add(rabbit);
-        entities.add(carrot);
+         * field.getTile(3, 2).setIsDestroyed(true);
+         * field.getTile(2, 2).setHasCarrot(true);
+         * field.getTile(2, 1).setHasRabbit(false);
+         * Rabbit rabbit = new Rabbit(0, 0, 10);
+         * Carrot carrot = new Carrot(1, 0, 10);
+         * 
+         * entities.add(rabbit);
+         * entities.add(carrot);
          */
     }
 
@@ -58,7 +58,8 @@ public class GameManager {
     public void manageTurn() {
         for (Entity entity : entities) {
             if (entity instanceof DynamicEntity dEntity) {
-                dEntity.setSurroundingTiles(getField().getSurroundingTiles(entity.getPosition(), dEntity.getSightRange()));
+                dEntity.setSurroundingTiles(
+                        getField().getSurroundingTiles(entity.getPosition(), dEntity.getSightRange()));
             }
             entity.getAction().execute(this);
         }
@@ -85,6 +86,6 @@ public class GameManager {
 
     public void removeEntity(Entity entity) {
         entities.remove(entity);
-        //entities.set(entities.indexOf(entity), null);
+        // entities.set(entities.indexOf(entity), null);
     }
 }
