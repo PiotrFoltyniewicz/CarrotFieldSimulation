@@ -37,7 +37,7 @@ public class Field {
     }
 
     public Tile getTile(int x, int y) {
-        return tiles[x][y];
+        return tiles[y][x];
     }
 
     private double calculateDistance(Point p1, Point p2) {

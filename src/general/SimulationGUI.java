@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import simulation.entities.Carrot;
 import simulation.entities.Entity;
+import simulation.entities.Farmer;
 import simulation.entities.Rabbit;
 import simulation.environment.Field;
 
@@ -20,6 +21,7 @@ public class SimulationGUI {
 
     private ImageIcon carrotIcon;
     private ImageIcon rabbitIcon;
+    private ImageIcon farmerIcon;
 
     public SimulationGUI(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -65,8 +67,13 @@ public class SimulationGUI {
         if (carrotIcon.getImageLoadStatus() != MediaTracker.COMPLETE) {
             System.out.println("Rabbbit image not loaded!");
         }
+        farmerIcon = new ImageIcon("../resources/img/farmer.png");
+        if (farmerIcon.getImageLoadStatus() != MediaTracker.COMPLETE) {
+            System.out.println("farmer image not loaded!");
+        }
         carrotIcon = resizeIcon(carrotIcon, 30, 30);
         rabbitIcon = resizeIcon(rabbitIcon, 30, 30);
+        farmerIcon = resizeIcon(farmerIcon, 30, 30);
     }
 
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
@@ -82,14 +89,19 @@ public class SimulationGUI {
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
                 List<Entity> entitiesOnTile = gameManager.getEntitiesOnTile(row, col);
+                grid[row][col].clearEntityIcon();
                 for (Entity entity : entitiesOnTile) {
+
                     System.out.println(entity.getClass().getSimpleName());
-                    if (entity instanceof Carrot) {
-                        grid[row][col].setEntityIcon(carrotIcon);
+                    if (entity instanceof Farmer) {
+                        grid[row][col].setEntityIcon(farmerIcon);
                     }
-                    if (entity instanceof Rabbit) {
-                        grid[row][col].setEntityIcon(rabbitIcon);
-                    }
+                    // if (entity instanceof Carrot) {
+                    // grid[row][col].setEntityIcon(carrotIcon);
+                    // }
+                    // if (entity instanceof Rabbit) {
+                    // grid[row][col].setEntityIcon(rabbitIcon);
+                    // }
                 }
 
                 if (field.getTile(row, col).getIsDestroyed()) {
