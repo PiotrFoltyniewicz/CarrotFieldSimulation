@@ -5,38 +5,48 @@ import java.util.*;
 
 public class FileHandler {
 
-    private File settingsFile;
-    private File statisticsFile;
+    private String settingsFilename;
+    private String statisticsFilename;
     private static FileHandler instance;
 
     public static FileHandler getInstance() {
         if (instance == null) {
-            instance = new FileHandler();
+            instance = new FileHandler("../resources/settings.txt", "../resources/statistics.txt");
         }
         return instance;
     }
 
-    public void openSettingsFile(String filename) {
+    public FileHandler(String settingsFilename, String statisticsFilename) {
+        this.settingsFilename = settingsFilename;
+        this.statisticsFilename = statisticsFilename;
+    }
+
+    public File openSettingsFile() {
         try {
-            settingsFile = new File(filename);
+            return new File(settingsFilename);
+
         } catch (Exception e) {
             System.err.println("Failed to open the settings file");
             e.printStackTrace();
         }
-
+        return null;
     }
 
-    public void openStatisticsFile(String filename) {
+    public File openStatisticsFile() {
         try {
-            statisticsFile = new File(filename);
+            return new File(statisticsFilename);
+
         } catch (Exception e) {
             System.err.println("Failed to open the statistics file");
             e.printStackTrace();
         }
+        return null;
     }
 
     public String readSettingsParameter(String key) {
+
         try {
+            File settingsFile = openSettingsFile();
             BufferedReader reader = new BufferedReader(new FileReader(settingsFile));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -58,6 +68,7 @@ public class FileHandler {
         boolean keyFound = false;
 
         try {
+            File statisticsFile = openStatisticsFile();
             BufferedReader reader = new BufferedReader(new FileReader(statisticsFile));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -80,6 +91,7 @@ public class FileHandler {
         }
 
         try {
+            File statisticsFile = openSettingsFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(statisticsFile));
             for (String line : fileLines) {
                 writer.write(line);
@@ -94,6 +106,7 @@ public class FileHandler {
 
     public void incrementStatisticsParameter(String key) {
         try {
+            File statisticsFile = openSettingsFile();
             BufferedReader reader = new BufferedReader(new FileReader(statisticsFile));
             String line;
             while ((line = reader.readLine()) != null) {
