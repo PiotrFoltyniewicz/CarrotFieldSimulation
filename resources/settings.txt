@@ -1,6 +1,5 @@
 fieldSize: 20
 entitySightRange: 5
-entitySpeed: 1
 initialFarmerCount: 5
 rabbitSpawnChance: 0.1
 minRabbitEatTime: 3

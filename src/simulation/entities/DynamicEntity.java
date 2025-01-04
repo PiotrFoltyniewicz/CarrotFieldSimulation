@@ -7,18 +7,29 @@ import simulation.environment.*;
 public abstract class DynamicEntity extends Entity {
 
     protected List<Tile> surroundingTiles;
-    protected Point targetPosition;
     protected int sightRange;
-    protected int movementSpeed;
 
     public void setSurroundingTiles(List<Tile> tiles) {
         surroundingTiles = tiles;
     }
 
-    public DynamicEntity(int posX, int posY, int sightRange, int movementSpeed) {
+    protected Tile getCurrentTile() {
+        for (Tile tile : surroundingTiles) {
+            Point tilePos = tile.getPosition();
+            if (tilePos.x == position.x && tilePos.y == position.y) {
+                return tile;
+            }
+        }
+        return null;
+    }
+
+    public DynamicEntity(int posX, int posY, int sightRange) {
         super(posX, posY);
         this.sightRange = sightRange;
-        this.movementSpeed = movementSpeed;
+    }
+
+    public int getSightRange() {
+        return sightRange;
     }
 
 }

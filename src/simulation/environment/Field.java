@@ -11,7 +11,7 @@ public class Field {
 
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
-                tiles[i][j] = new Tile();
+                tiles[i][j] = new Tile(j, i);
             }
         }
     }
