@@ -1,5 +1,1 @@
-
-testKey1: 123
-testKey2: 1.9999
-testKey3: general.FileHandler@eed1f14
-testKey4: test
+totalCarrotsPlanted: 14

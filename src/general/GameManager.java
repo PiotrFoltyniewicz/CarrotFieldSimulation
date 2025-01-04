@@ -1,6 +1,7 @@
 package general;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import simulation.entities.*;
 import simulation.environment.Field;
 
@@ -8,13 +9,13 @@ public class GameManager {
 
     private Field field;
     private SimulationGUI renderer;
-    private List<Entity> entities;
+    private CopyOnWriteArrayList<Entity> entities;
     private int maxTurns;
 
     public GameManager() {
         maxTurns = Integer.parseInt(FileHandler.getInstance().readSettingsParameter("maxTurnLimit"));
         field = new Field(Integer.parseInt(FileHandler.getInstance().readSettingsParameter("fieldSize")));
-        entities = new ArrayList<>();
+        entities = new CopyOnWriteArrayList<>();
         renderer = new SimulationGUI(this);
         /*
         field.getTile(3, 2).setIsDestroyed(true);
@@ -55,13 +56,13 @@ public class GameManager {
     }
 
     public void manageTurn() {
-
-        Iterator<Entity> iterator = entities.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().getAction().execute(this);
+        for (Entity entity : entities) {
+            if (entity instanceof DynamicEntity dEntity) {
+                dEntity.setSurroundingTiles(getField().getSurroundingTiles(entity.getPosition(), dEntity.getSightRange()));
+            }
+            entity.getAction().execute(this);
         }
         renderer.renderTurn();
-
     }
 
     public Field getField() {
@@ -84,5 +85,6 @@ public class GameManager {
 
     public void removeEntity(Entity entity) {
         entities.remove(entity);
+        //entities.set(entities.indexOf(entity), null);
     }
 }

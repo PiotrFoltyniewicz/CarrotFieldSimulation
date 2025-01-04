@@ -91,7 +91,7 @@ public class FileHandler {
         }
 
         try {
-            File statisticsFile = openSettingsFile();
+            File statisticsFile = openStatisticsFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(statisticsFile));
             for (String line : fileLines) {
                 writer.write(line);
@@ -106,7 +106,7 @@ public class FileHandler {
 
     public void incrementStatisticsParameter(String key) {
         try {
-            File statisticsFile = openSettingsFile();
+            File statisticsFile = openStatisticsFile();
             BufferedReader reader = new BufferedReader(new FileReader(statisticsFile));
             String line;
             while ((line = reader.readLine()) != null) {
