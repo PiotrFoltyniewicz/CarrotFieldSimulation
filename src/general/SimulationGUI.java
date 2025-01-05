@@ -11,6 +11,7 @@ import java.io.IOException;
 import simulation.entities.Carrot;
 import simulation.entities.Entity;
 import simulation.entities.Farmer;
+import simulation.entities.Dog;
 import simulation.entities.Rabbit;
 import simulation.environment.Field;
 
@@ -22,6 +23,7 @@ public class SimulationGUI {
     private ImageIcon carrotIcon;
     private ImageIcon rabbitIcon;
     private ImageIcon farmerIcon;
+    private ImageIcon dogIcon;
 
     public SimulationGUI(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -71,9 +73,14 @@ public class SimulationGUI {
         if (farmerIcon.getImageLoadStatus() != MediaTracker.COMPLETE) {
             System.out.println("farmer image not loaded!");
         }
+        dogIcon = new ImageIcon("../resources/img/dog.png");
+        if (dogIcon.getImageLoadStatus() != MediaTracker.COMPLETE) {
+            System.out.println("dog image not loaded!");
+        }
         carrotIcon = resizeIcon(carrotIcon, 30, 30);
         rabbitIcon = resizeIcon(rabbitIcon, 30, 30);
         farmerIcon = resizeIcon(farmerIcon, 30, 30);
+        dogIcon = resizeIcon(dogIcon, 30, 30);
     }
 
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
@@ -89,19 +96,22 @@ public class SimulationGUI {
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
                 List<Entity> entitiesOnTile = gameManager.getEntitiesOnTile(row, col);
-                grid[row][col].clearEntityIcon();
+                grid[row][col].clearEntityIcons();
                 for (Entity entity : entitiesOnTile) {
 
                     System.out.println(entity.getClass().getSimpleName());
-                    if (entity instanceof Farmer) {
-                        grid[row][col].setEntityIcon(farmerIcon);
+                    if (entity instanceof Carrot) {
+                        grid[row][col].addEntityIcon(carrotIcon);
                     }
-                    // if (entity instanceof Carrot) {
-                    // grid[row][col].setEntityIcon(carrotIcon);
-                    // }
-                    // if (entity instanceof Rabbit) {
-                    // grid[row][col].setEntityIcon(rabbitIcon);
-                    // }
+                    if (entity instanceof Rabbit) {
+                        grid[row][col].addEntityIcon(rabbitIcon);
+                    }
+                    if (entity instanceof Farmer) {
+                        grid[row][col].addEntityIcon(farmerIcon);
+                    }
+                    if (entity instanceof Dog) {
+                        grid[row][col].addEntityIcon(dogIcon);
+                    }
                 }
 
                 if (field.getTile(row, col).getIsDestroyed()) {
@@ -133,13 +143,15 @@ public class SimulationGUI {
 class JPanelWithBackground extends JPanel {
 
     private Image backgroundImage;
-    private JLabel entityLabel;
+    private JPanel entityLayer;
 
     public JPanelWithBackground(String fileName) throws IOException {
         setBackgroundImage(fileName);
-        entityLabel = new JLabel();
+        entityLayer = new JPanel();
+        entityLayer.setOpaque(false);
+        entityLayer.setLayout(new OverlayLayout(entityLayer)); // Stack entities
         setLayout(new BorderLayout());
-        add(entityLabel, BorderLayout.CENTER);
+        add(entityLayer, BorderLayout.CENTER);
     }
 
     public void setBackgroundImage(String fileName) throws IOException {
@@ -147,12 +159,17 @@ class JPanelWithBackground extends JPanel {
         repaint();
     }
 
-    public void setEntityIcon(ImageIcon icon) {
-        entityLabel.setIcon(icon);
+    public void addEntityIcon(ImageIcon icon) {
+        JLabel entityLabel = new JLabel(icon);
+        entityLayer.add(entityLabel);
+        entityLayer.revalidate();
+        entityLayer.repaint();
     }
 
-    public void clearEntityIcon() {
-        entityLabel.setIcon(null);
+    public void clearEntityIcons() {
+        entityLayer.removeAll();
+        entityLayer.revalidate();
+        entityLayer.repaint();
     }
 
     @Override

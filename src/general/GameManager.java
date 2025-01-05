@@ -45,7 +45,7 @@ public class GameManager {
 
     public void startSimulation() {
         int turn = 0;
-        System.out.println("starting");
+        System.out.println("starting2");
         spawnEntities();
 
         while (turn < maxTurns) {
