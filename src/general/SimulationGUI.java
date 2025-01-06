@@ -1,21 +1,14 @@
 package general;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
-import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.IOException;
-
-import simulation.entities.Carrot;
-import simulation.entities.Entity;
-import simulation.entities.Farmer;
-import simulation.entities.Dog;
-import simulation.entities.Rabbit;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import simulation.entities.*;
 import simulation.environment.Field;
 
 public class SimulationGUI {
+
     private JPanelWithBackground[][] grid;
     private JPanel panel;
     private GameManager gameManager;
@@ -24,6 +17,8 @@ public class SimulationGUI {
     private ImageIcon rabbitIcon;
     private ImageIcon farmerIcon;
     private ImageIcon dogIcon;
+    private Image dirtImage;
+    private Image grassImage;
 
     public SimulationGUI(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -37,24 +32,17 @@ public class SimulationGUI {
         panel = new JPanel(new GridLayout(fieldSize, fieldSize));
         grid = new JPanelWithBackground[fieldSize][fieldSize];
 
+        this.loadImages();
+
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                try {
-                    JPanelWithBackground tile = new JPanelWithBackground("../resources/img/grass.png");
-                    tile.setOpaque(true);
-                    tile.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                    panel.add(tile);
-                    grid[row][col] = tile;
-                } catch (IOException e) {
-                    System.err.println("Error loading grass image: " + e.getMessage());
-                    JPanel tile = new JPanel();
-                    tile.setBackground(Color.GREEN);
-                    panel.add(tile);
-                    grid[row][col] = null;
-                }
+                JPanelWithBackground tile = new JPanelWithBackground(grassImage);
+                tile.setOpaque(true);
+                tile.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                panel.add(tile);
+                grid[row][col] = tile;
             }
         }
-        this.loadImages();
 
         frame.add(panel);
         frame.setVisible(true);
@@ -77,6 +65,17 @@ public class SimulationGUI {
         if (dogIcon.getImageLoadStatus() != MediaTracker.COMPLETE) {
             System.out.println("dog image not loaded!");
         }
+        try {
+            grassImage = ImageIO.read(new File("../resources/img/grass.png"));
+        } catch (Exception e) {
+            System.err.println("grass image not loaded!");
+        }
+        try {
+            dirtImage = ImageIO.read(new File("../resources/img/dirt.png"));
+        } catch (Exception e) {
+            System.err.println("dirt image not loaded!");
+        }
+
         carrotIcon = resizeIcon(carrotIcon, 30, 30);
         rabbitIcon = resizeIcon(rabbitIcon, 30, 30);
         farmerIcon = resizeIcon(farmerIcon, 30, 30);
@@ -95,88 +94,38 @@ public class SimulationGUI {
 
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
-                List<Entity> entitiesOnTile = gameManager.getEntitiesOnTile(row, col);
                 grid[row][col].clearEntityIcons();
-                for (Entity entity : entitiesOnTile) {
-
-                    System.out.println(entity.getClass().getSimpleName());
-                    if (entity instanceof Carrot) {
-                        grid[row][col].addEntityIcon(carrotIcon);
-                    }
-                    if (entity instanceof Rabbit) {
-                        grid[row][col].addEntityIcon(rabbitIcon);
-                    }
-                    if (entity instanceof Farmer) {
-                        grid[row][col].addEntityIcon(farmerIcon);
-                    }
-                    if (entity instanceof Dog) {
-                        grid[row][col].addEntityIcon(dogIcon);
-                    }
-                }
-
                 if (field.getTile(row, col).getIsDestroyed()) {
-                    try {
-                        grid[row][col].setBackgroundImage("../resources/img/dirt.png");
-                    } catch (IOException e) {
-                        System.err.println("Error loading dirt image: " + e.getMessage());
-                        grid[row][col].setBackground(Color.gray);
-                    }
+                    grid[row][col].setBackgroundImage(dirtImage);
                 } else {
-                    try {
-                        grid[row][col].setBackgroundImage("../resources/img/grass.png");
-                    } catch (IOException e) {
-                        System.err.println("Error loading grass image: " + e.getMessage());
-                        grid[row][col].setBackground(Color.GREEN);
-                    }
+                    grid[row][col].setBackgroundImage(grassImage);
                 }
             }
         }
+
+        for (Entity entity : gameManager.getEntities()) {
+            int x = entity.getPosition().x;
+            int y = entity.getPosition().y;
+
+            if (entity instanceof Carrot) {
+                grid[y][x].addEntityIcon(carrotIcon);
+            }
+            if (entity instanceof Rabbit) {
+                grid[y][x].addEntityIcon(rabbitIcon);
+            }
+            if (entity instanceof Farmer) {
+                grid[y][x].addEntityIcon(farmerIcon);
+            }
+            if (entity instanceof Dog) {
+                grid[y][x].addEntityIcon(dogIcon);
+            }
+        }
+
         refresh();
     }
 
     private void refresh() {
         panel.revalidate();
         panel.repaint();
-    }
-}
-
-class JPanelWithBackground extends JPanel {
-
-    private Image backgroundImage;
-    private JPanel entityLayer;
-
-    public JPanelWithBackground(String fileName) throws IOException {
-        setBackgroundImage(fileName);
-        entityLayer = new JPanel();
-        entityLayer.setOpaque(false);
-        entityLayer.setLayout(new OverlayLayout(entityLayer)); // Stack entities
-        setLayout(new BorderLayout());
-        add(entityLayer, BorderLayout.CENTER);
-    }
-
-    public void setBackgroundImage(String fileName) throws IOException {
-        backgroundImage = ImageIO.read(new File(fileName));
-        repaint();
-    }
-
-    public void addEntityIcon(ImageIcon icon) {
-        JLabel entityLabel = new JLabel(icon);
-        entityLayer.add(entityLabel);
-        entityLayer.revalidate();
-        entityLayer.repaint();
-    }
-
-    public void clearEntityIcons() {
-        entityLayer.removeAll();
-        entityLayer.revalidate();
-        entityLayer.repaint();
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
     }
 }
