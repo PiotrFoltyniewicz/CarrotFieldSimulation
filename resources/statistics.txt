@@ -1,2 +1,2 @@
-totalCarrotsPlanted: 797
-totalCarrotsFullyGrown: 152
+totalCarrotsPlanted: 3236
+totalCarrotsFullyGrown: 2221

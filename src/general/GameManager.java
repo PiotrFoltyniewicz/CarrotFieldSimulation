@@ -56,6 +56,7 @@ public class GameManager {
     }
 
     public void manageTurn() {
+
         for (Entity entity : entities) {
             if (entity instanceof DynamicEntity dEntity) {
                 dEntity.setSurroundingTiles(
@@ -64,6 +65,13 @@ public class GameManager {
             entity.getAction().execute(this);
         }
         renderer.renderTurn();
+
+        // we need to slowdown the code, because it would be impossible to watch
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            System.out.println("Thread interrupted!");
+        }
     }
 
     public Field getField() {
@@ -87,5 +95,9 @@ public class GameManager {
     public void removeEntity(Entity entity) {
         entities.remove(entity);
         // entities.set(entities.indexOf(entity), null);
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
     }
 }
