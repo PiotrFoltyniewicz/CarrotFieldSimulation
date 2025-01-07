@@ -3,7 +3,7 @@ package general;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import simulation.entities.*;
-import simulation.environment.Field;
+import simulation.environment.*;
 
 public class GameManager {
 
@@ -11,22 +11,23 @@ public class GameManager {
     private SimulationGUI renderer;
     private CopyOnWriteArrayList<Entity> entities;
     private int maxTurns;
+    private int betweenTurnTime;
+
+    private float rabbitSpawnChance;
+    private int minRabbitEatTime;
+    private int maxRabbitEatTime;
 
     public GameManager() {
         maxTurns = Integer.parseInt(FileHandler.getInstance().readSettingsParameter("maxTurnLimit"));
         field = new Field(Integer.parseInt(FileHandler.getInstance().readSettingsParameter("fieldSize")));
+        betweenTurnTime = Integer.parseInt(FileHandler.getInstance().readSettingsParameter("millisecondsBetweenFrames"));
+
+        rabbitSpawnChance = Float.parseFloat(FileHandler.getInstance().readSettingsParameter("rabbitSpawnChance"));
+        minRabbitEatTime = Integer.parseInt(FileHandler.getInstance().readSettingsParameter("minRabbitEatTime"));
+        maxRabbitEatTime = Integer.parseInt(FileHandler.getInstance().readSettingsParameter("maxRabbitEatTime"));
+
         entities = new CopyOnWriteArrayList<>();
         renderer = new SimulationGUI(this);
-        /*
-         * field.getTile(3, 2).setIsDestroyed(true);
-         * field.getTile(2, 2).setHasCarrot(true);
-         * field.getTile(2, 1).setHasRabbit(false);
-         * Rabbit rabbit = new Rabbit(0, 0, 10);
-         * Carrot carrot = new Carrot(1, 0, 10);
-         * 
-         * entities.add(rabbit);
-         * entities.add(carrot);
-         */
     }
 
     private void spawnEntities() {
@@ -43,8 +44,26 @@ public class GameManager {
         }
     }
 
+    private void spawnRabbits() {
+        Random random = new Random();
+        int fieldSize = field.getFieldSize();
+        for (int x = 0; x < fieldSize; x++) {
+            for (int y = 0; y < fieldSize; y++) {
+                Tile tile = field.getTile(x, y);
+                if (tile.getHasCarrot() && !tile.getHasRabbit()) {
+                    if (random.nextFloat() <= rabbitSpawnChance) {
+                        int eatTime = random.nextInt(maxRabbitEatTime - minRabbitEatTime + 1) + minRabbitEatTime;
+                        tile.setHasRabbit(true);
+                        addEntity(new Rabbit(x, y, eatTime));
+                    }
+                }
+            }
+        }
+    }
+
     public void startSimulation() {
         int turn = 0;
+        FileHandler.getInstance().clearStatistics();
         System.out.println("starting2");
         spawnEntities();
 
@@ -56,7 +75,7 @@ public class GameManager {
     }
 
     public void manageTurn() {
-
+        spawnRabbits();;
         for (Entity entity : entities) {
             if (entity instanceof DynamicEntity dEntity) {
                 dEntity.setSurroundingTiles(
@@ -68,7 +87,7 @@ public class GameManager {
 
         // we need to slowdown the code, because it would be impossible to watch
         try {
-            Thread.sleep(300);
+            Thread.sleep(betweenTurnTime);
         } catch (InterruptedException e) {
             System.out.println("Thread interrupted!");
         }
@@ -94,7 +113,6 @@ public class GameManager {
 
     public void removeEntity(Entity entity) {
         entities.remove(entity);
-        // entities.set(entities.indexOf(entity), null);
     }
 
     public List<Entity> getEntities() {
