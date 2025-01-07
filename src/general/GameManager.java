@@ -50,6 +50,11 @@ public class GameManager {
         for (int x = 0; x < fieldSize; x++) {
             for (int y = 0; y < fieldSize; y++) {
                 Tile tile = field.getTile(x, y);
+                /*
+                if (tile.getIsDestroyed()) {
+                    System.out.println(x + " " + y + " destroyed");
+                }
+                 */
                 if (tile.getHasCarrot() && !tile.getHasRabbit()) {
                     if (random.nextFloat() <= rabbitSpawnChance) {
                         int eatTime = random.nextInt(maxRabbitEatTime - minRabbitEatTime + 1) + minRabbitEatTime;
@@ -75,7 +80,7 @@ public class GameManager {
     }
 
     public void manageTurn() {
-        spawnRabbits();;
+        spawnRabbits();
         for (Entity entity : entities) {
             if (entity instanceof DynamicEntity dEntity) {
                 dEntity.setSurroundingTiles(

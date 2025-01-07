@@ -92,13 +92,13 @@ public class SimulationGUI {
         Field field = gameManager.getField();
         int fieldSize = field.getFieldSize();
 
-        for (int row = 0; row < fieldSize; row++) {
-            for (int col = 0; col < fieldSize; col++) {
-                grid[row][col].clearEntityIcons();
-                if (field.getTile(row, col).getIsDestroyed()) {
-                    grid[row][col].setBackgroundImage(dirtImage);
+        for (int x = 0; x < fieldSize; x++) {
+            for (int y = 0; y < fieldSize; y++) {
+                grid[y][x].clearEntityIcons();
+                if (field.getTile(x, y).getIsDestroyed()) {
+                    grid[y][x].setBackgroundImage(dirtImage);
                 } else {
-                    grid[row][col].setBackgroundImage(grassImage);
+                    grid[y][x].setBackgroundImage(grassImage);
                 }
             }
         }

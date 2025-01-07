@@ -9,12 +9,6 @@ public class Rabbit extends StaticEntity {
     }
 
     @Override
-    protected boolean tryAction() {
-        turnsLeft--;
-        return turnsLeft <= 0;
-    }
-
-    @Override
     public EntityAction getAction() {
         return tryAction() ? new EatCarrotAction(position.x, position.y) : new NoneAction();
     }

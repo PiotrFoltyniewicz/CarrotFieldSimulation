@@ -12,20 +12,20 @@ public class Field {
         this.fieldSize = fieldSize;
         tiles = new Tile[fieldSize][fieldSize];
 
-        for (int i = 0; i < fieldSize; i++) {
-            for (int j = 0; j < fieldSize; j++) {
-                tiles[i][j] = new Tile(j, i);
+        for (int x = 0; x < fieldSize; x++) {
+            for (int y = 0; y < fieldSize; y++) {
+                tiles[y][x] = new Tile(x, y);
             }
         }
     }
 
     public List<Tile> getSurroundingTiles(Point currPos, int range) {
         List<Tile> surrTiles = new ArrayList<>();
-        for (int i = 0; i < fieldSize; i++) {
-            for (int j = 0; j < fieldSize; j++) {
-                Point tilePos = new Point(j, i);
+        for (int x = 0; x < fieldSize; x++) {
+            for (int y = 0; y < fieldSize; y++) {
+                Point tilePos = new Point(x, y);
                 if (calculateDistance(tilePos, currPos) < range) {
-                    surrTiles.add(tiles[i][j]);
+                    surrTiles.add(tiles[y][x]);
                 }
             }
         }

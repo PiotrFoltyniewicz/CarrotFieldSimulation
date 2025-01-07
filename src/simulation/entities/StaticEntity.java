@@ -5,7 +5,13 @@ public abstract class StaticEntity extends Entity {
     protected int turnsLeft;
     private int initTurnsLeft;
 
-    protected abstract boolean tryAction();
+    protected boolean tryAction() {
+        if (turnsLeft == 0) {
+            return false;
+        }
+        turnsLeft--;
+        return turnsLeft == 0;
+    }
 
     public StaticEntity(int posX, int posY, int turnsLeft) {
         super(posX, posY);
