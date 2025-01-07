@@ -126,4 +126,16 @@ public class FileHandler {
             e.printStackTrace();
         }
     }
+
+    public void clearStatistics() {
+        try {
+            File statisticsFile = openStatisticsFile();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(statisticsFile));
+            writer.write("");
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("Failed to clear statistics file");
+            e.printStackTrace();
+        }
+    }
 }
