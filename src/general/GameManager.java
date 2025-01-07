@@ -82,7 +82,8 @@ public class GameManager {
     public void manageTurn() {
         spawnRabbits();
         for (Entity entity : entities) {
-            if (entity instanceof DynamicEntity dEntity) {
+            if (entity instanceof DynamicEntity) {
+                DynamicEntity dEntity = (DynamicEntity)entity;
                 dEntity.setSurroundingTiles(
                         getField().getSurroundingTiles(entity.getPosition(), dEntity.getSightRange()));
             }
