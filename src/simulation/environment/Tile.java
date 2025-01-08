@@ -1,6 +1,7 @@
 package simulation.environment;
 
 import java.awt.Point;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Tile {
 
@@ -8,9 +9,16 @@ public class Tile {
     private boolean hasRabbit;
     private boolean hasCarrot;
     private boolean isDestroyed;
+    private final ReentrantLock lock;
 
     public Tile(int posX, int posY) {
         position = new Point(posX, posY);
+        lock = new ReentrantLock();
+    }
+
+    // Lock getter
+    public ReentrantLock getLock() {
+        return lock;
     }
 
     public boolean getHasRabbit() {
@@ -40,5 +48,4 @@ public class Tile {
     public Point getPosition() {
         return position;
     }
-
 }
