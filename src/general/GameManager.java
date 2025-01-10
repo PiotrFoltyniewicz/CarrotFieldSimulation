@@ -99,7 +99,6 @@ public class GameManager {
 
         renderer.renderTurn();
 
-        // we need to slowdown the code, because it would be impossible to watch
         try {
             Thread.sleep(betweenTurnTime);
         } catch (InterruptedException e) {
