@@ -10,3 +10,5 @@ minCarrotGrowTime: 6
 maxCarrotGrowTime: 16
 minLandRepairTime: 1
 maxLandRepairTime: 4
+minPlantTime: 1
+maxPlantTime: 4
