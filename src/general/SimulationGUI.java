@@ -2,6 +2,8 @@ package general;
 
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import simulation.entities.*;
@@ -88,6 +90,22 @@ public class SimulationGUI {
         return new ImageIcon(resizedImage);
     }
 
+    private int getPriority(Entity entity) {
+        if (entity instanceof Farmer) {
+            return 4;
+        }
+        if (entity instanceof Dog) {
+            return 3;
+        }
+        if (entity instanceof Rabbit) {
+            return 2;
+        }
+        if (entity instanceof Carrot) {
+            return 1;
+        }
+        return 0;
+    }
+
     public void renderTurn() {
         Field field = gameManager.getField();
         int fieldSize = field.getFieldSize();
@@ -103,21 +121,21 @@ public class SimulationGUI {
             }
         }
 
-        for (Entity entity : gameManager.getEntities()) {
+        List<Entity> entities = new ArrayList<>(gameManager.getEntities());
+        entities.sort((e1, e2) -> Integer.compare(getPriority(e2), getPriority(e1)));
+
+        for (Entity entity : entities) {
             int x = entity.getPosition().x;
             int y = entity.getPosition().y;
 
-            if (entity instanceof Carrot) {
-                grid[y][x].addEntityIcon(carrotIcon);
-            }
-            if (entity instanceof Rabbit) {
-                grid[y][x].addEntityIcon(rabbitIcon);
-            }
             if (entity instanceof Farmer) {
                 grid[y][x].addEntityIcon(farmerIcon);
-            }
-            if (entity instanceof Dog) {
+            } else if (entity instanceof Dog) {
                 grid[y][x].addEntityIcon(dogIcon);
+            } else if (entity instanceof Rabbit) {
+                grid[y][x].addEntityIcon(rabbitIcon);
+            } else if (entity instanceof Carrot) {
+                grid[y][x].addEntityIcon(carrotIcon);
             }
         }
 
