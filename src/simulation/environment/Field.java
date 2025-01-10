@@ -26,7 +26,7 @@ public class Field {
             for (int y = 0; y < fieldSize; y++) {
                 Point tilePos = new Point(x, y);
                 if (calculateDistance(tilePos, currPos) < range) {
-                    surrTiles.add(tiles.get(x).get(y));
+                    surrTiles.add(tiles.get(y).get(x));
                 }
             }
         }
@@ -38,7 +38,7 @@ public class Field {
     }
 
     public Tile getTile(int x, int y) {
-        return tiles.get(x).get(y);
+        return tiles.get(y).get(x);
     }
 
     private double calculateDistance(Point p1, Point p2) {

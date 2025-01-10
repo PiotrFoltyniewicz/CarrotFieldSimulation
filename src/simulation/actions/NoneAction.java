@@ -1,11 +1,12 @@
 package simulation.actions;
 
 import general.GameManager;
+import simulation.environment.Tile;
 
 public class NoneAction extends EntityAction {
 
     public NoneAction() {
-        super(-1, -1);
+        super(new Tile(-1, -1));
     }
 
     @Override

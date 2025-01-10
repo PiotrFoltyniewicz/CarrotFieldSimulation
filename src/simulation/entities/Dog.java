@@ -11,8 +11,8 @@ public class Dog extends DynamicEntity {
 
     private Tile targetTile;
 
-    public Dog(int posX, int posY, int sightRange) {
-        super(posX, posY, sightRange);
+    public Dog(Tile currentTile, int sightRange) {
+        super(currentTile, sightRange);
     }
 
     private double calculateDistance(Point p1, Point p2) {
@@ -20,7 +20,7 @@ public class Dog extends DynamicEntity {
     }
 
     private boolean chooseKillRabbit() {
-        return getCurrentTile().getHasRabbit();
+        return currentTile.getHasRabbit();
     }
 
     private void spotNearestRabbit() {
@@ -28,6 +28,7 @@ public class Dog extends DynamicEntity {
             return;
         }
         double distance = Double.MAX_VALUE;
+        Point position = currentTile.getPosition();
         for (Tile tile : surroundingTiles) {
             if (tile.getHasRabbit()) {
                 double currDist = calculateDistance(tile.getPosition(), position);
@@ -46,38 +47,40 @@ public class Dog extends DynamicEntity {
 
     private void randomMove() {
         List<Tile> possibleTiles = new ArrayList<>();
+        Point position = currentTile.getPosition();
         for (Tile tile : surroundingTiles) {
-            if (tile != getCurrentTile() && calculateDistance(tile.getPosition(), position) <= 1.1) {
+            if (tile != currentTile && calculateDistance(tile.getPosition(), position) <= 1.1) {
                 possibleTiles.add(tile);
             }
         }
         Random random = new Random();
-        position = possibleTiles.get(random.nextInt(possibleTiles.size())).getPosition();
+        currentTile = possibleTiles.get(random.nextInt(possibleTiles.size()));
     }
 
     private void targetMove() {
         List<Tile> possibleTiles = new ArrayList<>();
+        Point position = currentTile.getPosition();
         for (Tile tile : surroundingTiles) {
-            if (tile != getCurrentTile() && calculateDistance(tile.getPosition(), position) <= 1.1) {
+            if (tile != currentTile && calculateDistance(tile.getPosition(), position) <= 1.1) {
                 possibleTiles.add(tile);
             }
         }
-        Point bestPosition = possibleTiles.get(0).getPosition();
-        double bestDist = calculateDistance(bestPosition, targetTile.getPosition());
+        Tile bestTile = possibleTiles.get(0);
+        double bestDist = calculateDistance(bestTile.getPosition(), targetTile.getPosition());
         for (Tile tile : possibleTiles) {
             double currDist = calculateDistance(tile.getPosition(), targetTile.getPosition());
             if (currDist < bestDist) {
-                bestPosition = tile.getPosition();
+                bestTile = tile;
                 bestDist = currDist;
             }
         }
-        position = bestPosition;
+        currentTile = bestTile;
     }
 
     @Override
     public EntityAction getAction() {
         if (chooseKillRabbit()) {
-            return new KillRabbitAction(position.x, position.y);
+            return new KillRabbitAction(currentTile);
         }
         spotNearestRabbit();
         if (targetTile != null) {

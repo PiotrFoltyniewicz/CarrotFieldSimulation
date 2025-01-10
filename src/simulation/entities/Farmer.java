@@ -9,9 +9,9 @@ public class Farmer extends DynamicEntity {
 
     private Dog ownedDog;
 
-    public Farmer(int posX, int posY, int sightRange) {
-        super(posX, posY, sightRange);
-        ownedDog = new Dog(posX, posY, sightRange);
+    public Farmer(Tile currentTile, int sightRange) {
+        super(currentTile, sightRange);
+        ownedDog = new Dog(currentTile, sightRange);
     }
 
     private double calculateDistance(Point p1, Point p2) {
@@ -20,18 +20,19 @@ public class Farmer extends DynamicEntity {
 
     private void move() {
         List<Tile> possibleTiles = new ArrayList<>();
+        Point position = currentTile.getPosition();
         for (Tile tile : surroundingTiles) {
-            if (tile != getCurrentTile() && calculateDistance(tile.getPosition(), position) <= 1.1) {
+            if (tile != currentTile && calculateDistance(tile.getPosition(), position) <= 1.1) {
                 possibleTiles.add(tile);
             }
         }
         Random random = new Random();
-        position = possibleTiles.get(random.nextInt(possibleTiles.size())).getPosition();
+        currentTile = possibleTiles.get(random.nextInt(possibleTiles.size()));
     }
 
     private boolean chooseRepairTile() {
 
-        return getCurrentTile().getIsDestroyed();
+        return currentTile.getIsDestroyed();
     }
 
     private void spotNearestRabbit() {
@@ -57,7 +58,7 @@ public class Farmer extends DynamicEntity {
     }
 
     private boolean choosePlantCarrot() {
-        return !getCurrentTile().getHasCarrot();
+        return !currentTile.getHasCarrot();
     }
 
     @Override
@@ -65,10 +66,10 @@ public class Farmer extends DynamicEntity {
 
         spotNearestRabbit();
         if (chooseRepairTile()) {
-            return new RepairTileAction(position.x, position.y);
+            return new RepairTileAction(currentTile);
         }
         if (choosePlantCarrot()) {
-            return new PlantCarrotAction(position.x, position.y);
+            return new PlantCarrotAction(currentTile);
         }
         move();
         return new NoneAction();

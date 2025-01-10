@@ -2,7 +2,6 @@ package general;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.ReentrantLock;
 import simulation.entities.*;
 import simulation.environment.*;
 
@@ -40,7 +39,7 @@ public class GameManager {
         for (int i = 0; i < farmerCount; i++) {
             int x = random.nextInt(field.getFieldSize());
             int y = random.nextInt(field.getFieldSize());
-            Farmer newFarmer = new Farmer(x, y, entitySightRange);
+            Farmer newFarmer = new Farmer(field.getTile(x, y), entitySightRange);
             addEntity(newFarmer);
             addEntity(newFarmer.getDog());
         }
@@ -52,19 +51,12 @@ public class GameManager {
         for (int x = 0; x < fieldSize; x++) {
             for (int y = 0; y < fieldSize; y++) {
                 Tile tile = field.getTile(x, y);
-                ReentrantLock tileLock = tile.getLock();
-
-                tileLock.lock();
-                try {
-                    if (tile.getHasCarrot() && !tile.getHasRabbit()) {
-                        if (random.nextFloat() <= rabbitSpawnChance) {
-                            int eatTime = random.nextInt(maxRabbitEatTime - minRabbitEatTime + 1) + minRabbitEatTime;
-                            tile.setHasRabbit(true);
-                            addEntity(new Rabbit(x, y, eatTime));
-                        }
+                if (tile.getHasCarrot() && !tile.getHasRabbit()) {
+                    if (random.nextFloat() <= rabbitSpawnChance) {
+                        int eatTime = random.nextInt(maxRabbitEatTime - minRabbitEatTime + 1) + minRabbitEatTime;
+                        tile.setHasRabbit(true);
+                        addEntity(new Rabbit(tile, eatTime));
                     }
-                } finally {
-                    tileLock.unlock();
                 }
             }
         }
@@ -73,7 +65,7 @@ public class GameManager {
     public void startSimulation() {
         int turn = 0;
         FileHandler.getInstance().clearStatistics();
-        System.out.println("starting2");
+        System.out.println("starting");
         spawnEntities();
 
         while (turn < maxTurns) {
