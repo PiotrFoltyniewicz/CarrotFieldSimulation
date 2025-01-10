@@ -2,16 +2,25 @@ package simulation.entities;
 
 import java.awt.Point;
 import java.util.*;
+
+import general.FileHandler;
 import simulation.actions.*;
 import simulation.environment.*;
+
+enum farmerActions {
+    PLANT, REPAIR, NONE
+}
 
 public class Farmer extends DynamicEntity {
 
     private Dog ownedDog;
+    private int turnsLeft;
+    private farmerActions farmerAction;
 
     public Farmer(Tile currentTile, int sightRange) {
         super(currentTile, sightRange);
         ownedDog = new Dog(currentTile, sightRange);
+        farmerAction = farmerActions.PLANT;
     }
 
     private double calculateDistance(Point p1, Point p2) {
@@ -65,15 +74,37 @@ public class Farmer extends DynamicEntity {
     public EntityAction getAction() {
 
         spotNearestRabbit();
-        if (chooseRepairTile()) {
-            return new RepairTileAction(currentTile);
+        if (turnsLeft > 0) {
+            turnsLeft--;
+            return new NoneAction();
         }
-        if (choosePlantCarrot()) {
-            return new PlantCarrotAction(currentTile);
+        switch (farmerAction) {
+            case REPAIR:
+                farmerAction = farmerActions.NONE;
+                return new RepairTileAction(currentTile);
+            case PLANT:
+                farmerAction = farmerActions.NONE;
+                return new PlantCarrotAction(currentTile);
+            case NONE:
+                break;
         }
-        move();
-        return new NoneAction();
+        FileHandler fileHandler = FileHandler.getInstance();
+        Random random = new Random();
 
+        if (chooseRepairTile()) {
+            int minTime = Integer.parseInt(fileHandler.readSettingsParameter("minLandRepairTime"));
+            int maxTime = Integer.parseInt(fileHandler.readSettingsParameter("maxLandRepairTime"));
+            turnsLeft = random.nextInt(maxTime - minTime + 1) + minTime;
+            farmerAction = farmerActions.REPAIR;
+        } else if (choosePlantCarrot()) {
+            int minTime = Integer.parseInt(fileHandler.readSettingsParameter("minPlantTime"));
+            int maxTime = Integer.parseInt(fileHandler.readSettingsParameter("maxPlantTime"));
+            turnsLeft = random.nextInt(maxTime - minTime + 1) + minTime;
+            farmerAction = farmerActions.PLANT;
+        } else {
+            move();
+        }
+        return new NoneAction();
     }
 
     public Dog getDog() {
