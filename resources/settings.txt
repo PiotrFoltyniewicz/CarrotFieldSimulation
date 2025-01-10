@@ -1,6 +1,6 @@
 fieldSize: 20
 maxTurnLimit: 1000
-millisecondsBetweenFrames: 100
+millisecondsBetweenFrames: 200
 entitySightRange: 5
 initialFarmerCount: 10
 rabbitSpawnChance: 0.05
