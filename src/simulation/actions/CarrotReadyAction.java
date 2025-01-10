@@ -2,11 +2,12 @@ package simulation.actions;
 
 import general.FileHandler;
 import general.GameManager;
+import simulation.environment.Tile;
 
 public class CarrotReadyAction extends EntityAction {
 
-    public CarrotReadyAction(int posX, int posY) {
-        super(posX, posY);
+    public CarrotReadyAction(Tile currentTile) {
+        super(currentTile);
     }
 
     @Override

@@ -2,22 +2,18 @@ package simulation.entities;
 
 import java.awt.*;
 import simulation.actions.*;
+import simulation.environment.Tile;
 
 public abstract class Entity {
 
-    protected Point position;
+    protected Tile currentTile;
 
-    public Entity(int posX, int posY) {
-        position = new Point(posX, posY);
-    }
-
-    public void setPosition(int x, int y) {
-        position.x = x;
-        position.y = y;
+    public Entity(Tile currentTile) {
+        this.currentTile = currentTile;
     }
 
     public Point getPosition() {
-        return position;
+        return currentTile.getPosition();
     }
 
     public abstract EntityAction getAction();

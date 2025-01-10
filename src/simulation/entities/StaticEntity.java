@@ -1,5 +1,7 @@
 package simulation.entities;
 
+import simulation.environment.Tile;
+
 public abstract class StaticEntity extends Entity {
 
     protected int turnsLeft;
@@ -13,8 +15,8 @@ public abstract class StaticEntity extends Entity {
         return turnsLeft == 0;
     }
 
-    public StaticEntity(int posX, int posY, int turnsLeft) {
-        super(posX, posY);
+    public StaticEntity(Tile currentTile, int turnsLeft) {
+        super(currentTile);
         this.turnsLeft = turnsLeft;
         initTurnsLeft = turnsLeft;
     }

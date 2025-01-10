@@ -5,17 +5,18 @@ import java.util.*;
 
 public class Field {
 
-    private Tile[][] tiles;
+    private List<List<Tile>> tiles;
     private int fieldSize;
 
     public Field(int fieldSize) {
         this.fieldSize = fieldSize;
-        tiles = new Tile[fieldSize][fieldSize];
-
-        for (int x = 0; x < fieldSize; x++) {
-            for (int y = 0; y < fieldSize; y++) {
-                tiles[y][x] = new Tile(x, y);
+        tiles = Collections.synchronizedList(new ArrayList<>());
+        for (int i = 0; i < fieldSize; i++) {
+            List<Tile> row = Collections.synchronizedList(new ArrayList<>());
+            for (int j = 0; j < fieldSize; j++) {
+                row.add(new Tile(j, i));
             }
+            tiles.add(row);
         }
     }
 
@@ -25,7 +26,7 @@ public class Field {
             for (int y = 0; y < fieldSize; y++) {
                 Point tilePos = new Point(x, y);
                 if (calculateDistance(tilePos, currPos) < range) {
-                    surrTiles.add(tiles[y][x]);
+                    surrTiles.add(tiles.get(y).get(x));
                 }
             }
         }
@@ -37,7 +38,7 @@ public class Field {
     }
 
     public Tile getTile(int x, int y) {
-        return tiles[y][x];
+        return tiles.get(y).get(x);
     }
 
     private double calculateDistance(Point p1, Point p2) {

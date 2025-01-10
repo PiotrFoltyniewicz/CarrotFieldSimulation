@@ -2,19 +2,17 @@ package simulation.actions;
 
 import general.FileHandler;
 import general.GameManager;
+import simulation.environment.Tile;
 
 public class RepairTileAction extends EntityAction {
 
-    public RepairTileAction(int posX, int posY) {
-        super(posX, posY);
+    public RepairTileAction(Tile currentTile) {
+        super(currentTile);
     }
 
     @Override
     public void execute(GameManager manager) {
-        int x = currentPosition.x;
-        int y = currentPosition.y;
-
-        manager.getField().getTile(x, y).setIsDestroyed(false);
+        currentTile.setIsDestroyed(false);
         FileHandler.getInstance().incrementStatisticsParameter("totalTilesRepaired");
     }
 }

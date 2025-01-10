@@ -43,7 +43,7 @@ public class FileHandler {
         return null;
     }
 
-    public String readSettingsParameter(String key) {
+    public synchronized String readSettingsParameter(String key) {
 
         try {
             File settingsFile = openSettingsFile();
@@ -63,7 +63,7 @@ public class FileHandler {
         return null;
     }
 
-    public <T> void writeStatisticsParameter(String key, T value) {
+    public synchronized <T> void writeStatisticsParameter(String key, T value) {
         List<String> fileLines = new ArrayList<>();
         boolean keyFound = false;
 
@@ -104,7 +104,7 @@ public class FileHandler {
         }
     }
 
-    public void incrementStatisticsParameter(String key) {
+    public synchronized void incrementStatisticsParameter(String key) {
         try {
             File statisticsFile = openStatisticsFile();
             BufferedReader reader = new BufferedReader(new FileReader(statisticsFile));
@@ -127,7 +127,7 @@ public class FileHandler {
         }
     }
 
-    public void clearStatistics() {
+    public synchronized void clearStatistics() {
         try {
             File statisticsFile = openStatisticsFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(statisticsFile));

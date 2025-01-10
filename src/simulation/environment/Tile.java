@@ -25,20 +25,19 @@ public class Tile {
         return isDestroyed;
     }
 
-    public void setHasRabbit(boolean hasRabbit) {
+    public synchronized void setHasRabbit(boolean hasRabbit) {
         this.hasRabbit = hasRabbit;
     }
 
-    public void setHasCarrot(boolean hasCarrot) {
+    public synchronized void setHasCarrot(boolean hasCarrot) {
         this.hasCarrot = hasCarrot;
     }
 
-    public void setIsDestroyed(boolean isDestroyed) {
+    public synchronized void setIsDestroyed(boolean isDestroyed) {
         this.isDestroyed = isDestroyed;
     }
 
     public Point getPosition() {
         return position;
     }
-
 }

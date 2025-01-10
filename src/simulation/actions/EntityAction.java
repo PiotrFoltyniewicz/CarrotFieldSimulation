@@ -1,14 +1,14 @@
 package simulation.actions;
 
 import general.GameManager;
-import java.awt.Point;
+import simulation.environment.Tile;
 
 public abstract class EntityAction {
 
-    protected Point currentPosition;
+    protected Tile currentTile;
 
-    public EntityAction(int posX, int posY) {
-        currentPosition = new Point(posX, posY);
+    public EntityAction(Tile currentTile) {
+        this.currentTile = currentTile;
     }
 
     public abstract void execute(GameManager manager);
