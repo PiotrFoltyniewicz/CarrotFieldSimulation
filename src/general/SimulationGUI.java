@@ -21,6 +21,7 @@ public class SimulationGUI {
     private ImageIcon dogIcon;
     private Image dirtImage;
     private Image grassImage;
+    private ImageIcon[] carrotStages;
 
     public SimulationGUI(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -35,6 +36,14 @@ public class SimulationGUI {
         grid = new JPanelWithBackground[fieldSize][fieldSize];
 
         this.loadImages();
+
+        carrotStages = new ImageIcon[]{
+            resizeIcon(carrotIcon, 6, 6),
+            resizeIcon(carrotIcon, 12, 12),
+            resizeIcon(carrotIcon, 18, 18),
+            resizeIcon(carrotIcon, 24, 24),
+            resizeIcon(carrotIcon, 30, 30)
+        };
 
         for (int row = 0; row < fieldSize; row++) {
             for (int col = 0; col < fieldSize; col++) {
@@ -135,7 +144,8 @@ public class SimulationGUI {
             } else if (entity instanceof Rabbit) {
                 grid[y][x].addEntityIcon(rabbitIcon);
             } else if (entity instanceof Carrot) {
-                grid[y][x].addEntityIcon(carrotIcon);
+                Carrot cEntity = (Carrot) entity;
+                grid[y][x].addEntityIcon(carrotStages[(int) (cEntity.getProgressPercent() * 4)]);
             }
         }
 

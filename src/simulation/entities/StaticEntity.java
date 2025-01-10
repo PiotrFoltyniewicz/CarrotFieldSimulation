@@ -23,9 +23,9 @@ public abstract class StaticEntity extends Entity {
 
     public float getProgressPercent() {
         if (initTurnsLeft <= 0) {
-            return 100.0f;
+            return 1;
         }
-        float percent = ((initTurnsLeft - turnsLeft) / (float) initTurnsLeft) * 100;
-        return Math.max(0, Math.min(percent, 100));
+        float percent = ((initTurnsLeft - turnsLeft) / (float) initTurnsLeft);
+        return Math.max(0, Math.min(percent, 1));
     }
 }
