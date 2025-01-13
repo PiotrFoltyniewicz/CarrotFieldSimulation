@@ -154,6 +154,5 @@ public class SimulationGUI {
 
     private void refresh() {
         panel.revalidate();
-        panel.repaint();
     }
 }

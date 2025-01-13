@@ -1,5 +1,5 @@
-totalCarrotsPlanted: 102
-totalRabbitsKilled: 45
-totalCarrotsFullyGrown: 83
-totalCarrotsEaten: 18
-totalTilesRepaired: 5
+totalCarrotsPlanted: 92
+totalRabbitsKilled: 89
+totalCarrotsFullyGrown: 71
+totalCarrotsEaten: 36
+totalTilesRepaired: 9
