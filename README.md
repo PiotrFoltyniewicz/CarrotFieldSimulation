@@ -13,3 +13,5 @@ The farmers have a field of size NxN, where they grows carrots. Farmers move ran
 - Written in Java
 - Uses multithreading
 - Uses design patterns
+
+![obraz](https://github.com/user-attachments/assets/d5b8f0f9-6424-40ac-85d5-03cccda5c310)
